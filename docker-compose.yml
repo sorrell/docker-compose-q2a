@@ -1,0 +1,37 @@
+version: '3.5'
+
+services:
+
+  apache-php:
+    depends_on:
+      - mysql
+    env_file:
+      - .env
+    image: intxlog/question2answer
+    environment:
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASS: ${DB_PASSWORD}
+      MYSQL_DB: ${DB_NAME}
+      MYSQL_HOST: ${DB_HOST}
+      MYSQL_PORT: ${DB_PORT}
+    links:
+      - mysql
+    ports:
+      - '${WEB_PORT_HOST}:${WEB_PORT}'
+    
+  mysql:
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASS: ${DB_PASSWORD}
+      MYSQL_DB: ${DB_NAME}
+      MYSQL_HOST: ${DB_HOST}
+      MYSQL_PORT: ${DB_PORT}
+    image: mysql:5.7
+    ports:
+      - '${DB_PORT_HOST}:${DB_PORT}'
+    volumes:
+      - ./schema.sh:/docker-entrypoint-initdb.d/schema.sh
+      - ./var/lib/mysql:/var/lib/mysql:delegated
