@@ -7,7 +7,7 @@ services:
       - mysql
     env_file:
       - .env
-    image: intxlog/question2answer
+    image: sorrell/question2answer
     environment:
       MYSQL_USER: ${DB_USER}
       MYSQL_PASS: ${DB_PASSWORD}
@@ -18,6 +18,7 @@ services:
       - mysql
     ports:
       - '${WEB_PORT_HOST}:${WEB_PORT}'
+      - '${WEB_PORT_HOST_SSL}:${WEB_PORT_SSL}'
     
   mysql:
     env_file:
@@ -29,7 +30,9 @@ services:
       MYSQL_DB: ${DB_NAME}
       MYSQL_HOST: ${DB_HOST}
       MYSQL_PORT: ${DB_PORT}
-    image: mysql:5.7
+    image: mysql:8.0.23
+    cap_add:
+      - SYS_NICE  # CAP_SYS_NICE
     ports:
       - '${DB_PORT_HOST}:${DB_PORT}'
     volumes:
